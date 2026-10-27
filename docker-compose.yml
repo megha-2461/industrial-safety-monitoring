@@ -1,0 +1,19 @@
+services:
+  api:
+    build: .
+    image: industrial-safety-vision:latest
+    ports:
+      - "8000:8000"
+    environment:
+      MODEL_PATH: /app/models/best.pt
+      DEVICE: cpu
+      INDUSTRIAL_SAFETY_MOCK_DETECTOR: "true"
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+      - ./configs:/app/configs
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
